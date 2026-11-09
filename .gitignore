@@ -1,5 +1,24 @@
 # Dependencies
-server/node_modules/
+node_modules/
 
-# Environment variables
-server/.env
+# Environment variables (secrets). Commit .env.example templates only.
+.env
+.env.*
+!.env.example
+
+# Use yarn only (no npm lockfiles)
+package-lock.json
+
+# Build output
+dist/
+build/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Office lock files (when the design doc is open in Word)
+~$*
