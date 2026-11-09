@@ -1,5 +1,5 @@
 # All repository files require approval from either code owner
-* @Anjulahesan @crystelhilton
+* @Anjulahesan @youchenc
 
 # Protect the CODEOWNERS file itself
-/.github/CODEOWNERS @Anjulahesan @crystelhilton
+/.github/CODEOWNERS @Anjulahesan @youchenc
