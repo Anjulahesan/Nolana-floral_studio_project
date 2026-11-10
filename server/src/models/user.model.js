@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-const roles = ["customer", "admin"];
+const ROLES = ["customer", "admin"];
 
 const contactSchema = new Schema({
     type: { type: String, enum: ["mobile", "phone", "email", "whatsapp"], required: true },

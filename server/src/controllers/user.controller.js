@@ -1,8 +1,8 @@
-// const { User, Order } = require("../models");
-// const { HttpError } = require("../middleware/errorHandler");
-// const pick = require("../utils/pick");
+const { User, Order } = require("../models");
+const { HttpError } = require("../middleware/errorHandler");
+const pick = require("../utils/pick");
 
-const profile_fields = ["fname", "lname", "email", "contacts", "addresses"];
+const PROFILE_FIELDS = ["fname", "lname", "email", "contacts", "addresses"];
 
 async function findUser(id) {
     const user = await User.findById(id);
@@ -23,13 +23,13 @@ exports.get = async (req, res) => {
 
 // POST /api/users      
 exports.create = async (req, res) => {
-    const user = await User.create(pick(req.body, [...profile_fields, "password", "role"]));
+    const user = await User.create(pick(req.body, [...PROFILE_FIELDS, "password", "role"]));
     res.status(201).json(user);
 };
 
 // PATCH /api/users/:id     (only admin can change role)
 exports.update = async (req, res) => {
-    const fields = req.user.role === "admin" ? [...profile_fields, "role"] : profile_fields;
+    const fields = req.user.role === "admin" ? [...PROFILE_FIELDS, "role"] : PROFILE_FIELDS;
     const user = await User.findByIdAndUpdate(req.params.id, pick(req.body, fields), 
     {
         retrunDocument: "after",
