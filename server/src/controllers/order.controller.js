@@ -1,5 +1,5 @@
 const { Order, Product, User, Counter } = require("../models");
-const { ORDER_STATUSES } = require("../models/Order");
+const { ORDER_STATUSES } = require("../models/order.model");
 const { HttpError } = require("../middleware/errorHandler");
 const pick = require("../utils/pick");
 
