@@ -5,9 +5,9 @@ const ORDER_STATUSES = ["pending", "preparing", "out_for_delivery", "delivered",
 const orderItemSchema = new Schema(
   {
     productId: { type: Types.ObjectId, ref: "Product", required: true },
-    name: { type: String, required: true }, // snapshot at order time
+    name: { type: String, required: true }, 
     size: { type: String, required: true },
-    price: { type: Number, required: true, min: 0 }, // snapshot at order time
+    price: { type: Number, required: true, min: 0 }, 
     qty: { type: Number, required: true, min: 1 },
   },
   { _id: false }
@@ -23,7 +23,7 @@ const deliverySchema = new Schema(
       city: { type: String, required: true, trim: true },
     },
     date: { type: Date, required: true },
-    timeSlot: { type: String, trim: true }, // Example: "10:00-12:00"
+    timeSlot: { type: String, trim: true }, 
     fee: { type: Number, default: 0, min: 0 },
   },
   { _id: false }
