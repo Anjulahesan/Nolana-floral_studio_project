@@ -63,7 +63,7 @@ async function seed() {
       fname: "Studio",
       lname: "Admin",
       email: "admin@floralstudio.test",
-      password: "admin123",
+      password: "admin12345",
       role: "admin",
     },
     {
@@ -71,7 +71,7 @@ async function seed() {
       lname: "Najafi",
       email: "amir@example.com",
       contacts: [{ type: "mobile", value: "+1 416 789 1234" }],
-      password: "amir123",
+      password: "amir12345",
       addresses: [{ label: "Home", line1: "78 King St", city: "Toronto", isDefault: true }],
     },
     {
