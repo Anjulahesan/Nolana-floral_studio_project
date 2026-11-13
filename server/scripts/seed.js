@@ -1,25 +1,28 @@
 require("dotenv").config({ quiet: true });
+const mongoose = require("mongoose");
 
-const { connectDB, disconnectDB } = require("../src/config/config.js");
 const { Category, Product, User, Order, Counter } = require("../src/models");
 
 async function seed() {
-  await connectDB(process.env.MONGODB_URI);
+  if (!process.env.MONGODB_URI) {
+    throw new Error("MONGODB_URI is not configured");
+  }
+  
+  await mongoose.connect(process.env.MONGODB_URI);
 
   await Promise.all([Order, Product, Category, User, Counter].map((M) => M.deleteMany({})));
 
-  const [bouquets, wedding, sympathy, plants] = await Category.create([
+  const [bouquets, wedding, gifts, custom] = await Category.create([
     { name: "Bouquets", slug: "bouquets", description: "Hand-tied bouquets for every occasion" },
     { name: "Wedding", slug: "wedding", description: "Bridal bouquets, boutonnieres, and decor" },
     { name: "Gifts", slug: "gifts", description: "Gift baskets, chocolates and more" },
-    { name: "Occasions", slug: "occasions", description: "Special arrangements for holidays and events" },
     { name: "Custom", slug: "custom", description: "Create your own arrangement" },
   ]);
 
-  const [redRose, pastel, , , orchid] = await Product.create([
+  const [redRose, pastel, whiteBridal, orchid] = await Product.create([
     {
       name: "Red Rose Classic",
-      description: "12 long-stem red roses with eucalyptus",
+      description: "12 long-stemmed red roses with eucalyptus",
       categoryId: bouquets._id,
       flowers: ["Rose", "Eucalyptus"],
       colors: ["red", "green"],
@@ -29,7 +32,7 @@ async function seed() {
     {
       name: "Pastel Dream",
       description: "Soft pink lilies, carnations and baby's breath",
-      categoryId: bouquets._id,
+      categoryId: custom._id,
       flowers: ["Lily", "Carnation", "Baby's Breath"],
       colors: ["pink", "white"],
       occasions: ["Birthday", "Thank You"],
@@ -37,7 +40,7 @@ async function seed() {
     },
     {
       name: "White Bridal Cascade",
-      description: "Cascading bridal bouquet of white roses and orchids",
+      description: "A cascading bridal bouquet of white roses and orchids",
       categoryId: wedding._id,
       flowers: ["Rose", "Orchid"],
       colors: ["white"],
@@ -45,18 +48,9 @@ async function seed() {
       sizes: [{ label: "Standard", price: 18000 }],
     },
     {
-      name: "Peaceful Wreath",
-      description: "White chrysanthemum and lily standing wreath",
-      categoryId: gifts._id,
-      flowers: ["Chrysanthemum", "Lily"],
-      colors: ["white"],
-      occasions: ["Sympathy"],
-      sizes: [{ label: "Standard", price: 12000 }],
-    },
-    {
       name: "Phalaenopsis Orchid Pot",
       description: "Double-stemmed orchid in a ceramic pot",
-      categoryId: custom._id,
+      categoryId: gifts._id,
       flowers: ["Orchid"],
       colors: ["purple"],
       occasions: ["Housewarming", "Thank You"],
@@ -64,36 +58,41 @@ async function seed() {
     },
   ]);
 
-  const [youchen, nevan, anjula, amir] = await User.create([
+  const [amir, anjula, nevan, youchen] = await User.create([
     {
-      fname: "Youchen",
-      lname: "Cheng",
-      email: "youchen@example.com",
-      contacts: [{ type: "mobile", value: "+1 416 555 1234" }],
-      addresses: [{ label: "Home", line1: "123 Main St", city: "Toronto", isDefault: true }]
+      fname: "Studio",
+      lname: "Admin",
+      email: "admin@floralstudio.test",
+      role: "admin",
     },
     {
-      fname: "Nevan",
-      lname: "Newaz",
-      email: "nevan@example.com",
-      contacts: [
-        { type: "mobile", value: "+1 416 123 4567" }],
-      addresses: [{ label: "Home", line1: "12 Lake Rd", city: "Toronto", isDefault: true }]
+      fname: "Amir",
+      lname: "Najafi",
+      email: "amir@example.com",
+      contacts: [{ type: "mobile", value: "+1 416 789 1234" }],
+      addresses: [{ label: "Home", line1: "78 King St", city: "Toronto", isDefault: true }],
     },
     {
       fname: "Anjula",
       lname: "Gedara",
       email: "anjula@example.com",
       contacts: [{ type: "mobile", value: "+1 416 567 1234" }],
-      addresses: [{ label: "Home", line1: "45 Galle Rd", city: "Toronto", isDefault: true }]
+      addresses: [{ label: "Home", line1: "45 Galle Rd", city: "Toronto", isDefault: true }],
     },
-        {
-      fname: "Amir",
-      lname: "Najafi",
-      email: "amir@example.com",
-      contacts: [{ type: "mobile", value: "+1 416 789 1234" }],
-      addresses: [{ label: "Home", line1: "78 King St", city: "Toronto", isDefault: true }]
-    }
+    {
+      fname: "Nevan",
+      lname: "Newaz",
+      email: "nevan@example.com",
+      contacts: [{ type: "mobile", value: "+1 416 123 4567" }],
+      addresses: [{ label: "Home", line1: "12 Lake Rd", city: "Toronto", isDefault: true }],
+    },
+    {
+      fname: "Youchen",
+      lname: "Cheng",
+      email: "youchen@example.com",
+      contacts: [{ type: "mobile", value: "+1 416 555 1234" }],
+      addresses: [{ label: "Home", line1: "123 Main St", city: "Toronto", isDefault: true }],
+    },
   ]);
 
   const tomorrow = new Date();
@@ -116,34 +115,62 @@ async function seed() {
   };
 
   await mkOrder(
-    youchen._id,
+    amir._id,
     [
       { productId: redRose._id, name: redRose.name, size: "Deluxe", price: 6500, qty: 1 },
       { productId: orchid._id, name: orchid.name, size: "Standard", price: 7500, qty: 1 },
     ],
     {
-      recipientName: "Nevan Newaz",
-      recipientPhone: "+1 416 123 4567",
-      address: { line1: "12 Lake Rd", city: "Toronto", isDefault: true },
+      recipientName: "Alice Smith",
+      recipientPhone: "+1 416 987 6543",
+      address: { line1: "78 King St", city: "Toronto", isDefault: true },
       date: tomorrow,
       timeSlot: "10:00-12:00",
       fee: 500,
     },
-    { cardMessage: "Merry Christmas!", payment: { method: "card", status: "paid" } }
+    { cardMessage: "Happy anniversary!", payment: { method: "card", status: "paid" } }
   );
 
   await mkOrder(
     anjula._id,
     [{ productId: pastel._id, name: pastel.name, size: "Standard", price: 3800, qty: 2 }],
     {
-      recipientName: "Amir Najafi",
-      recipientPhone: "+1 416 789 1234",
-      address: { line1: "78 King St", city: "Toronto", isDefault: true },
+      recipientName: "Bob Johnson",
+      recipientPhone: "+1 416 654 3210",
+      address: { line1: "456 Main St", city: "Toronto", isDefault: true },
       date: tomorrow,
       timeSlot: "14:00-16:00",
       fee: 400,
     },
-    { cardMessage: "Happy Birthday!" }
+    { cardMessage: "Happy birthday!" }
+  );
+
+  await mkOrder(
+    nevan._id,
+    [{ productId: whiteBridal._id, name: whiteBridal.name, size: "Standard", price: 18000, qty: 1 }],
+    {
+      recipientName: "Charlie Brown",
+      recipientPhone: "+1 416 321 9876",
+      address: { line1: "789 Queen St", city: "Toronto", isDefault: true },
+      date: tomorrow,
+      timeSlot: "16:00-18:00",
+      fee: 600,
+    },
+    { cardMessage: "Congratulations on your wedding!", payment: { method: "bank_transfer", status: "unpaid" } }
+  );
+
+  await mkOrder(
+    youchen._id,
+    [{ productId: orchid._id, name: orchid.name, size: "Standard", price: 7500, qty: 1 }],
+    {
+      recipientName: "Daisy Williams",
+      recipientPhone: "+1 416 432 1098",
+      address: { line1: "321 King St", city: "Toronto", isDefault: true },
+      date: tomorrow,
+      timeSlot: "12:00-14:00",
+      fee: 550,
+    },
+    { cardMessage: "Thinking of you!", payment: { method: "cash", status: "unpaid" } }
   );
 
   const counts = await Promise.all(
@@ -157,4 +184,4 @@ seed()
     console.error("Seed failed:", err);
     process.exitCode = 1;
   })
-  .finally(disconnectDB);
+  .finally(() => mongoose.disconnect());
