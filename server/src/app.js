@@ -1,26 +1,34 @@
-import express from 'express';
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const routes = require("./routes");
+const { notFound, errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
 
-// Middleware
-app.use(express.json());
+app.use(helmet());
 
-// Base Routes
-app.get('/', (req, res) => {
-    res.json({
-        message: 'Welcome to Nolana Floral Studio API!'
-    });
-});
+const allowedOrigins = (process.env.CLIENT_URL || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
 
-// Global Error Handling Middleware
-app.use((err, req, res, next) => {
-    if (err.name === 'UnauthorizedError') {
-        return res.status(401).json({ "error": `${err.name}: ${err.message}` });
-    } else if (err) {
-        console.error(err);
-        return res.status(400).json({ "error": `${err.name}: ${err.message}` });
-    }
-    next();
-});
+app.use(
+  cors({
+    origin: allowedOrigins.length ? allowedOrigins : false,
+  })
+);
 
-export default app;
+app.use(express.json({ limit: "1mb" }));
+
+if (process.env.NODE_ENV !== "test") {
+  app.use(morgan("dev"));
+}
+
+app.use("/api", routes);
+
+app.use(notFound);
+app.use(errorHandler);
+
+module.exports = app;

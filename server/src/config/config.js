@@ -1,10 +1,31 @@
-import 'dotenv/config';
+const mongoose = require("mongoose");
+const models = require("../models");
 
-const config = {
-    env: process.env.NODE_ENV || 'development',
-    port: Number(process.env.PORT) || 3000,
-    mongoUri: process.env.MONGODB_URI,
-    jwtSecret: process.env.JWT_SECRET
-};
+async function connectDB(uri) {
+  if (!uri) {
+    throw new Error("MONGODB_URI is not set. Please check your .env file!");
+  }
 
-export default config;
+  mongoose.set("strictQuery", true);
+
+  await mongoose.connect(uri);
+  console.log("Database connected...");
+
+  // Check the indexes are created
+  for (const Model of Object.values(models)) {
+    await Model.init();
+  }
+
+  console.log(
+    `Collections ready: ${Object.values(models)
+      .map((m) => m.collection.name)
+      .join(", ")}`
+  );
+}
+
+async function disconnectDB() {
+  await mongoose.disconnect();
+  console.log("Database disconnected");
+}
+
+module.exports = { connectDB, disconnectDB };
