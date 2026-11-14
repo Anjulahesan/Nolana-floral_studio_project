@@ -1,25 +1,25 @@
-import config from './config/config.js';
-import app from './app.js';
-import mongoose from 'mongoose';
+require("dotenv").config({ quiet: true });
 
-// Connect to MongoDB and start the server
-const startServer = async () => {
-    try {
-        if (!config.mongoUri) {
-            throw new Error('MONGODB_URI is not configured');
-        }
+const app = require("./app");
+const { connectDB } = require("./config/config");
 
-        app.listen(config.port, () => {
-            console.log(`Server started on port ${config.port}`);
-        });
+const PORT = process.env.PORT || 3000;
 
-        await mongoose.connect(config.mongoUri);
-        console.log('Connected to Nolana Database!');
-
-    } catch (error) {
-        console.error('Server startup failed:', error.message);
-        process.exit(1);
+(async () => {
+  try {
+    if (!process.env.JWT_SECRET) {
+      throw new Error("JWT_SECRET is not set. Please check your .env file!");
     }
-};
 
-startServer();
+    // Connect to DB
+    await connectDB(process.env.MONGODB_URI);
+
+    // Server 
+    app.listen(PORT, () => {
+      console.log(`Nolana Floral Studio API listening on http://localhost:${PORT}/api`);
+    });
+  } catch (err) {
+    console.error("Failed to start:", err.message);
+    process.exit(1);
+  }
+})();
