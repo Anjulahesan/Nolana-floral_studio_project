@@ -26,7 +26,7 @@ async function seed() {
       flowers: ["Rose", "Eucalyptus"],
       colors: ["red", "green"],
       occasions: ["Anniversary", "Valentine's"],
-      sizes: [{ label: "Standard", price: 4500 }, { label: "Deluxe", price: 6500 }],
+      sizes: [{ label: "Standard", price: 65 }, { label: "Deluxe", price: 85 }],
     },
     {
       name: "Pastel Dream",
@@ -35,7 +35,7 @@ async function seed() {
       flowers: ["Lily", "Carnation", "Baby's Breath"],
       colors: ["pink", "white"],
       occasions: ["Birthday", "Thank You"],
-      sizes: [{ label: "Standard", price: 3800 }, { label: "Deluxe", price: 5200 }],
+      sizes: [{ label: "Standard", price: 50 }, { label: "Deluxe", price: 70 }],
     },
     {
       name: "White Bridal Cascade",
@@ -44,7 +44,7 @@ async function seed() {
       flowers: ["Rose", "Orchid"],
       colors: ["white"],
       occasions: ["Wedding"],
-      sizes: [{ label: "Standard", price: 18000 }],
+      sizes: [{ label: "Standard", price: 290 }],
     },
     {
       name: "Phalaenopsis Orchid Pot",
@@ -53,7 +53,7 @@ async function seed() {
       flowers: ["Orchid"],
       colors: ["purple"],
       occasions: ["Housewarming", "Thank You"],
-      sizes: [{ label: "Standard", price: 7500 }],
+      sizes: [{ label: "Standard", price: 85 }],
     },
   ]);
 
@@ -121,8 +121,8 @@ async function seed() {
   await mkOrder(
     amir._id,
     [
-      { productId: redRose._id, name: redRose.name, size: "Deluxe", price: 6500, qty: 1 },
-      { productId: orchid._id, name: orchid.name, size: "Standard", price: 7500, qty: 1 },
+      { productId: redRose._id, name: redRose.name, size: "Deluxe", price: 85, qty: 1 },
+      { productId: orchid._id, name: orchid.name, size: "Standard", price: 85, qty: 1 },
     ],
     {
       recipientName: "Alice Smith",
@@ -130,49 +130,49 @@ async function seed() {
       address: { line1: "78 King St", city: "Toronto", isDefault: true },
       date: tomorrow,
       timeSlot: "10:00-12:00",
-      fee: 500,
+      fee: 20,
     },
     { cardMessage: "Happy anniversary!", payment: { method: "card", status: "paid" } }
   );
 
   await mkOrder(
     anjula._id,
-    [{ productId: pastel._id, name: pastel.name, size: "Standard", price: 3800, qty: 2 }],
+    [{ productId: pastel._id, name: pastel.name, size: "Standard", price: 50, qty: 2 }],
     {
       recipientName: "Bob Johnson",
       recipientPhone: "+1 416 654 3210",
       address: { line1: "456 Main St", city: "Toronto", isDefault: true },
       date: tomorrow,
       timeSlot: "14:00-16:00",
-      fee: 400,
+      fee: 15,
     },
     { cardMessage: "Happy birthday!" }
   );
 
   await mkOrder(
     nevan._id,
-    [{ productId: whiteBridal._id, name: whiteBridal.name, size: "Standard", price: 18000, qty: 1 }],
+    [{ productId: whiteBridal._id, name: whiteBridal.name, size: "Standard", price: 290, qty: 1 }],
     {
       recipientName: "Charlie Brown",
       recipientPhone: "+1 416 321 9876",
       address: { line1: "789 Queen St", city: "Toronto", isDefault: true },
       date: tomorrow,
       timeSlot: "16:00-18:00",
-      fee: 600,
+      fee: 50,
     },
     { cardMessage: "Congratulations on your wedding!", payment: { method: "bank_transfer", status: "unpaid" } }
   );
 
   await mkOrder(
     youchen._id,
-    [{ productId: orchid._id, name: orchid.name, size: "Standard", price: 7500, qty: 1 }],
+    [{ productId: orchid._id, name: orchid.name, size: "Standard", price: 85, qty: 1 }],
     {
       recipientName: "Daisy Williams",
       recipientPhone: "+1 416 432 1098",
       address: { line1: "321 King St", city: "Toronto", isDefault: true },
       date: tomorrow,
       timeSlot: "12:00-14:00",
-      fee: 550,
+      fee: 15,
     },
     { cardMessage: "Thinking of you!", payment: { method: "cash", status: "unpaid" } }
   );

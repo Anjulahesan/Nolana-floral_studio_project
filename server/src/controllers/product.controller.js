@@ -1,4 +1,5 @@
-const { Product, Category } = require("../models/product.model.js");
+const Product = require("../models/product.model");
+const Category = require("../models/category.model");
 const { HttpError } = require("../middleware/errorHandler");
 const pick = require("../utils/pick");
 
@@ -9,7 +10,6 @@ async function assertCategory(categoryId) {
     throw new HttpError(400, "categoryId does not exist");
   }
 }
-
 
 exports.list = async (req, res) => {
   const filter = {};
@@ -54,7 +54,7 @@ exports.update = async (req, res) => {
 
 
 exports.remove = async (req, res) => {
-  const product = await Product.findByIdAndUpdate(req.params.id, { isActive: false });
+  const product = await Product.findByIdAndDelete(req.params.id, { isActive: false });
   if (!product) throw new HttpError(404, "Product not found");
   res.status(204).end();
 };
