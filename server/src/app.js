@@ -26,6 +26,10 @@ if (process.env.NODE_ENV !== "test") {
   app.use(morgan("dev"));
 }
 
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to Nolana Floral Studio API" });
+});
+
 app.use("/api", routes);
 
 app.use(notFound);
