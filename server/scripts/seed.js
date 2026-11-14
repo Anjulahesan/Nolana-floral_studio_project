@@ -1,16 +1,15 @@
 require("dotenv").config({ quiet: true });
-const mongoose = require("mongoose");
 
+const { connectDB, disconnectDB } = require("../src/config/config");
 const { Category, Product, User, Order, Counter } = require("../src/models");
 
 async function seed() {
-  if (!process.env.MONGODB_URI) {
-    throw new Error("MONGODB_URI is not configured");
-  }
-  
-  await mongoose.connect(process.env.MONGODB_URI);
+  await connectDB(process.env.MONGODB_URI);
 
-  await Promise.all([Order, Product, Category, User, Counter].map((M) => M.deleteMany({})));
+  // Clear existing data
+  await Promise.all(
+    [Order, Product, Category, User, Counter].map((M) => M.deleteMany({}))
+  );
 
   const [bouquets, wedding, gifts, custom] = await Category.create([
     { name: "Bouquets", slug: "bouquets", description: "Hand-tied bouquets for every occasion" },
@@ -58,12 +57,12 @@ async function seed() {
     },
   ]);
 
-  const [amir, anjula, nevan, youchen] = await User.create([
+  const [, amir, anjula, nevan, youchen] = await User.create([
     {
       fname: "Studio",
       lname: "Admin",
       email: "admin@floralstudio.test",
-      password: "admin12345",
+      password: "admin@1234",
       role: "admin",
     },
     {
@@ -71,14 +70,14 @@ async function seed() {
       lname: "Najafi",
       email: "amir@example.com",
       contacts: [{ type: "mobile", value: "+1 416 789 1234" }],
-      password: "amir12345",
+      password: "amir@1234",
       addresses: [{ label: "Home", line1: "78 King St", city: "Toronto", isDefault: true }],
     },
     {
       fname: "Anjula",
-      lname: "Gedara",
+      lname: "Sewath Gedara",
       email: "anjula@example.com",
-      password: "anjula123",
+      password: "anjula@123",
       contacts: [{ type: "mobile", value: "+1 416 567 1234" }],
       addresses: [{ label: "Home", line1: "45 Galle Rd", city: "Toronto", isDefault: true }],
     },
@@ -86,7 +85,7 @@ async function seed() {
       fname: "Nevan",
       lname: "Newaz",
       email: "nevan@example.com",
-      password: "nevan123",
+      password: "nevan@123",
       contacts: [{ type: "mobile", value: "+1 416 123 4567" }],
       addresses: [{ label: "Home", line1: "12 Lake Rd", city: "Toronto", isDefault: true }],
     },
@@ -94,7 +93,7 @@ async function seed() {
       fname: "Youchen",
       lname: "Cheng",
       email: "youchen@example.com",
-      password: "youchen123",
+      password: "youchen@123",
       contacts: [{ type: "mobile", value: "+1 416 555 1234" }],
       addresses: [{ label: "Home", line1: "123 Main St", city: "Toronto", isDefault: true }],
     },
@@ -178,9 +177,12 @@ async function seed() {
     { cardMessage: "Thinking of you!", payment: { method: "cash", status: "unpaid" } }
   );
 
-  const counts = await Promise.all(
-    [Category, Product, User, Order].map(async (M) => `${M.collection.name}=${await M.countDocuments()}`)
+const counts = await Promise.all(
+    [Category, Product, User, Order].map(
+      async (M) => `${M.collection.name}=${await M.countDocuments()}`
+    )
   );
+
   console.log(`Seeded: ${counts.join(", ")}`);
 }
 
@@ -189,4 +191,6 @@ seed()
     console.error("Seed failed:", err);
     process.exitCode = 1;
   })
-  .finally(() => mongoose.disconnect());
+  .finally(async () => {
+    await disconnectDB();
+  });
