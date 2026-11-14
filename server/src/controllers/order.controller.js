@@ -124,10 +124,12 @@ exports.cancel = async (req, res) => {
 
 // DELETE /api/orders/:id   
 exports.remove = async (req, res) => {
+  if (!isAdmin(req)) throw new HttpError(403, "Forbidden: admin only");
   const order = await Order.findByIdAndDelete(req.params.id);
   if (!order) throw new HttpError(404, "Order not found");
   res.status(204).end();
 };
+
 
 // GET /api/orders/reports/top-products   
 exports.topProducts = async (req, res) => {
