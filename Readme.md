@@ -51,6 +51,17 @@ The project is being developed in multiple phases, beginning with backend develo
 - Integrate the frontend with backend APIs.
 - Test the complete application.
 
+### Part 3 – Project Presentation and Demonstration
+
+- Prepare a PowerPoint presentation containing two slides introducing the project and team members.
+- Include the team name, logo, members' full names, student IDs, roles, course information, and project details.
+- Record a short video presentation demonstrating the application's functionality.
+- Demonstrate the main features and operations of the application.
+- Explain the code and technologies used to implement the application's features.
+- Showcase the backend, database integration, APIs, and other implemented functionalities.
+- Ensure the video has clear audio and screen resolution so that the application and code are easy to view.
+- Publish the demonstration video on YouTube or another supported streaming platform and provide the video link.
+
 ## Team Collaboration
 
 Our team uses the following tools to coordinate development:

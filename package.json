@@ -1,0 +1,11 @@
+{
+  "name": "Nolana-floral_studio",
+  "private": true,
+  "description": "Nolana Floral Studio web application: server (Express API) and client",
+  "scripts": {
+    "server:install": "yarn --cwd server install",
+    "server:dev": "yarn --cwd server dev",
+    "server:start": "yarn --cwd server start",
+    "server:seed": "yarn --cwd server seed"
+  }
+}
